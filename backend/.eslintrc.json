@@ -20,7 +20,8 @@
       "error",
       { "argsIgnorePattern": "^_$" }
     ],
-    "no-unused-vars": "off"
+    "no-unused-vars": "off",
+    "max-classes-per-file": "off"
   },
   "settings": {
     "import/resolver": {
