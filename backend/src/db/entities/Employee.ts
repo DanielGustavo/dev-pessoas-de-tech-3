@@ -27,8 +27,8 @@ export class Employee {
   @Column('varchar')
   email: string;
 
-  @Column('char', { length: 15 })
-  phone: string;
+  @Column('char', { length: 15, nullable: true })
+  phone?: string;
 
   @Column('int')
   salary: number;
@@ -38,8 +38,8 @@ export class Employee {
   })
   role: string;
 
-  @Column('varchar')
-  avatarUrl: string;
+  @Column('varchar', { nullable: true })
+  avatarFilename?: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

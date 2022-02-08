@@ -45,7 +45,7 @@ export class Employee {
   role: string;
 
   @Field({ nullable: true })
-  avatarUrl?: string;
+  avatarFilename?: string;
 
   @Field()
   createdAt: Date;
