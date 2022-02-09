@@ -5,6 +5,7 @@ import { isUUID } from 'class-validator';
 
 import { AddEmployeeService } from '../../../services/AddEmployeeService';
 import { AddEmployeeProfilePictureService } from '../../../services/AddEmployeeProfilePictureService';
+import { DeleteEmployeeService } from '../../../services/DeleteEmployeeService';
 
 import { AddEmployeeArgs, Employee } from './schema';
 
@@ -46,6 +47,20 @@ class EmployeesResolver {
       fileType: picture.mimetype,
       employeeId,
     });
+
+    return employee;
+  }
+
+  @Authorized()
+  @Mutation(() => Employee)
+  async deleteEmployee(@Arg('employeeId', () => ID) employeeId: string) {
+    if (!isUUID(employeeId)) {
+      throw new UserInputError('employeeId must be a valid UUID');
+    }
+
+    const deleteEmployeeService = new DeleteEmployeeService();
+
+    const employee = await deleteEmployeeService.execute({ employeeId });
 
     return employee;
   }
