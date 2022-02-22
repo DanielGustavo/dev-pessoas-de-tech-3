@@ -7,6 +7,7 @@ import { AddEmployeeService } from '../../../services/AddEmployeeService';
 import { AddEmployeeProfilePictureService } from '../../../services/AddEmployeeProfilePictureService';
 import { DeleteEmployeeService } from '../../../services/DeleteEmployeeService';
 import { EditEmployeeService } from '../../../services/EditEmployeeService';
+import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
 
 import { AddEmployeeArgs, EditEmployeeArgs, Employee } from './schema';
 
@@ -62,6 +63,20 @@ class EmployeesResolver {
     const deleteEmployeeService = new DeleteEmployeeService();
 
     const employee = await deleteEmployeeService.execute({ employeeId });
+
+    return employee;
+  }
+
+  @Authorized()
+  @Mutation(() => Employee)
+  async loadEmployee(@Arg('employeeId', () => ID) employeeId: string) {
+    if (!isUUID(employeeId)) {
+      throw new UserInputError('employeeId must be a valid UUID');
+    }
+
+    const loadAnEmployeeService = new LoadAnEmployeeService();
+
+    const employee = await loadAnEmployeeService.execute({ employeeId });
 
     return employee;
   }
