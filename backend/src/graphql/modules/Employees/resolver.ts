@@ -1,5 +1,5 @@
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { Arg, Args, Authorized, Mutation, Resolver } from 'type-graphql';
+import { Arg, Args, Authorized, Mutation, Query, Resolver } from 'type-graphql';
 import { UserInputError } from 'apollo-server-express';
 import { isUUID } from 'class-validator';
 
@@ -68,7 +68,7 @@ class EmployeesResolver {
   }
 
   @Authorized()
-  @Mutation(() => Employee)
+  @Query(() => Employee)
   async loadEmployee(@Args() { employeeId }: EmployeeId) {
     const loadAnEmployeeService = new LoadAnEmployeeService();
 
