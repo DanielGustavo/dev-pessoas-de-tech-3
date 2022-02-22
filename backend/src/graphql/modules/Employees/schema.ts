@@ -24,6 +24,27 @@ export class AddEmployeeArgs {
   role: keyof typeof EmployeeRoles;
 }
 
+@ArgsType()
+export class EditEmployeeArgs {
+  @Field({ nullable: true })
+  name: string;
+
+  @Field({ nullable: true })
+  @IsEmail()
+  email: string;
+
+  @Field({ nullable: true })
+  @IsMobilePhone('any')
+  phone?: string;
+
+  @Field(() => Int, { nullable: true })
+  @Min(0)
+  salary: number;
+
+  @Field(() => String, { nullable: true })
+  role: keyof typeof EmployeeRoles;
+}
+
 @ObjectType()
 export class Employee {
   @Field(() => ID)
