@@ -1,7 +1,14 @@
-import { IsEmail, IsMobilePhone, Min } from 'class-validator';
+import { IsEmail, IsMobilePhone, IsUUID, Min } from 'class-validator';
 import { ArgsType, Field, Int, ID, ObjectType } from 'type-graphql';
 
 import { EmployeeRoles } from '../../../db/entities';
+
+@ArgsType()
+export class EmployeeId {
+  @Field(() => ID)
+  @IsUUID()
+  employeeId: string;
+}
 
 @ArgsType()
 export class AddEmployeeArgs {
@@ -43,6 +50,10 @@ export class EditEmployeeArgs {
 
   @Field(() => String, { nullable: true })
   role: keyof typeof EmployeeRoles;
+
+  @Field(() => ID)
+  @IsUUID()
+  employeeId: string;
 }
 
 @ObjectType()

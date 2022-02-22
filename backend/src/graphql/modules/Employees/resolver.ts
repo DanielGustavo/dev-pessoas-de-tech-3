@@ -1,5 +1,5 @@
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { Arg, Args, Authorized, ID, Mutation, Resolver } from 'type-graphql';
+import { Arg, Args, Authorized, Mutation, Resolver } from 'type-graphql';
 import { UserInputError } from 'apollo-server-express';
 import { isUUID } from 'class-validator';
 
@@ -9,7 +9,12 @@ import { DeleteEmployeeService } from '../../../services/DeleteEmployeeService';
 import { EditEmployeeService } from '../../../services/EditEmployeeService';
 import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
 
-import { AddEmployeeArgs, EditEmployeeArgs, Employee } from './schema';
+import {
+  AddEmployeeArgs,
+  EditEmployeeArgs,
+  Employee,
+  EmployeeId,
+} from './schema';
 
 @Resolver()
 class EmployeesResolver {
@@ -34,8 +39,7 @@ class EmployeesResolver {
   @Mutation(() => Employee)
   async addEmployeeProfilePicture(
     @Arg('picture', () => GraphQLUpload) picture: FileUpload,
-    @Arg('employeeId', () => ID)
-    employeeId: string
+    @Args() { employeeId }: EmployeeId
   ) {
     if (!isUUID(employeeId)) {
       throw new UserInputError('employeeId must be a valid UUID');
@@ -55,11 +59,7 @@ class EmployeesResolver {
 
   @Authorized()
   @Mutation(() => Employee)
-  async deleteEmployee(@Arg('employeeId', () => ID) employeeId: string) {
-    if (!isUUID(employeeId)) {
-      throw new UserInputError('employeeId must be a valid UUID');
-    }
-
+  async deleteEmployee(@Args() { employeeId }: EmployeeId) {
     const deleteEmployeeService = new DeleteEmployeeService();
 
     const employee = await deleteEmployeeService.execute({ employeeId });
@@ -69,11 +69,7 @@ class EmployeesResolver {
 
   @Authorized()
   @Mutation(() => Employee)
-  async loadEmployee(@Arg('employeeId', () => ID) employeeId: string) {
-    if (!isUUID(employeeId)) {
-      throw new UserInputError('employeeId must be a valid UUID');
-    }
-
+  async loadEmployee(@Args() { employeeId }: EmployeeId) {
     const loadAnEmployeeService = new LoadAnEmployeeService();
 
     const employee = await loadAnEmployeeService.execute({ employeeId });
@@ -84,13 +80,8 @@ class EmployeesResolver {
   @Authorized()
   @Mutation(() => Employee)
   async editEmployee(
-    @Arg('employeeId', () => ID) employeeId: string,
-    @Args() { email, name, phone, role, salary }: EditEmployeeArgs
+    @Args() { email, name, phone, role, salary, employeeId }: EditEmployeeArgs
   ) {
-    if (!isUUID(employeeId)) {
-      throw new UserInputError('employeeId must be a valid UUID');
-    }
-
     const editEmployeeService = new EditEmployeeService();
     const employee = await editEmployeeService.execute({
       fields: {
