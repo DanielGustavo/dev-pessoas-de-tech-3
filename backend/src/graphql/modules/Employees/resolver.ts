@@ -8,12 +8,20 @@ import { AddEmployeeProfilePictureService } from '../../../services/AddEmployeeP
 import { DeleteEmployeeService } from '../../../services/DeleteEmployeeService';
 import { EditEmployeeService } from '../../../services/EditEmployeeService';
 import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
+import {
+  Filter,
+  LoadEmployeesService,
+  Order,
+} from '../../../services/LoadEmployeesService';
 
 import {
   AddEmployeeArgs,
   EditEmployeeArgs,
   Employee,
   EmployeeId,
+  LoadEmployeesFilterArgs,
+  LoadEmployeesOrderArgs,
+  PaginationArgs,
 } from './schema';
 
 @Resolver()
@@ -75,6 +83,29 @@ class EmployeesResolver {
     const employee = await loadAnEmployeeService.execute({ employeeId });
 
     return employee;
+  }
+
+  @Authorized()
+  @Query(() => [Employee])
+  async loadEmployees(
+    @Arg('order', () => LoadEmployeesOrderArgs, { nullable: true })
+    order: Order,
+
+    @Arg('filter', () => LoadEmployeesFilterArgs, { nullable: true })
+    filter: Filter,
+
+    @Arg('pagination', () => PaginationArgs, { nullable: true })
+    pagination: PaginationArgs
+  ) {
+    const loadEmployeesService = new LoadEmployeesService();
+
+    const employees = await loadEmployeesService.execute({
+      order,
+      filter,
+      pagination,
+    });
+
+    return employees;
   }
 
   @Authorized()

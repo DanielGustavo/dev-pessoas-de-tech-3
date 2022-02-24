@@ -1,5 +1,22 @@
-import { IsEmail, IsMobilePhone, IsUUID, Min } from 'class-validator';
-import { ArgsType, Field, Int, ID, ObjectType } from 'type-graphql';
+import {
+  IsEmail,
+  IsMobilePhone,
+  IsUUID,
+  Min,
+  IsIn,
+  MinLength,
+  MaxLength,
+  Max,
+} from 'class-validator';
+import {
+  ArgsType,
+  Field,
+  Int,
+  ID,
+  ObjectType,
+  InputType,
+  Float,
+} from 'type-graphql';
 
 import { EmployeeRoles } from '../../../db/entities';
 
@@ -54,6 +71,99 @@ export class EditEmployeeArgs {
   @Field(() => ID)
   @IsUUID()
   employeeId: string;
+}
+
+@InputType()
+class FilterStringField {
+  @Field()
+  @MinLength(1)
+  @MaxLength(255)
+  value: string;
+
+  @Field()
+  @IsIn(['=', '!='])
+  operator: string;
+}
+
+@InputType()
+class FilterNumberField {
+  @Field(() => Float)
+  @MinLength(1)
+  @MaxLength(255)
+  value: number;
+
+  @Field()
+  @IsIn(['=', '>', '>=', '<', '<=', '!='])
+  operator: string;
+}
+
+@InputType()
+export class LoadEmployeesFilterArgs {
+  @Field(() => FilterStringField, { nullable: true })
+  name: FilterStringField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  email: FilterStringField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  phone: FilterStringField;
+
+  @Field(() => FilterNumberField, { nullable: true })
+  salary: FilterNumberField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  role: FilterStringField;
+}
+
+@InputType()
+export class PaginationArgs {
+  @Field(() => Int)
+  @Min(1)
+  page: number;
+
+  @Field(() => Int)
+  @Min(1)
+  @Max(30)
+  take: number;
+}
+
+@InputType()
+export class LoadEmployeesOrderArgs {
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  id: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  avatarFilename: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  name: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  email: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  phone: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  salary: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  role: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  createdAt: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  updatedAt: string;
 }
 
 @ObjectType()
