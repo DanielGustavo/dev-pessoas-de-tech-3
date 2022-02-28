@@ -40,7 +40,7 @@ export class AddEmployeeArgs {
   @IsMobilePhone('any')
   phone?: string;
 
-  @Field(() => Int)
+  @Field(() => Float)
   @Min(0)
   salary: number;
 
@@ -61,7 +61,7 @@ export class EditEmployeeArgs {
   @IsMobilePhone('any')
   phone?: string;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => Float, { nullable: true })
   @Min(0)
   salary: number;
 
@@ -180,7 +180,7 @@ export class Employee {
   @Field({ nullable: true })
   phone?: string;
 
-  @Field(() => Int)
+  @Field(() => Float)
   salary: number;
 
   @Field()
