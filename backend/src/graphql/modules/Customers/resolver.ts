@@ -1,8 +1,9 @@
 import { Args, Authorized, Mutation, Resolver } from 'type-graphql';
 
 import { AddCustomerService } from '../../../services/AddCustomerService';
+import { DeleteCustomerService } from '../../../services/DeleteCustomerService';
 
-import { AddCustomerArgs, Customer } from './schema';
+import { AddCustomerArgs, Customer, CustomerId } from './schema';
 
 @Resolver()
 export class CustomersResolver {
@@ -19,6 +20,15 @@ export class CustomersResolver {
       phone,
       site,
     });
+
+    return customer;
+  }
+
+  @Authorized()
+  @Mutation(() => Customer)
+  async deleteCustomer(@Args() { customerId }: CustomerId) {
+    const deleteCustomerService = new DeleteCustomerService();
+    const customer = await deleteCustomerService.execute({ customerId });
 
     return customer;
   }

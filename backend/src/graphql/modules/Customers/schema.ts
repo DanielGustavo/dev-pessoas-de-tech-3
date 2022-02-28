@@ -3,6 +3,7 @@ import {
   IsMobilePhone,
   IsNumberString,
   IsUrl,
+  IsUUID,
   Length,
 } from 'class-validator';
 import { ArgsType, Field, ID, ObjectType } from 'type-graphql';
@@ -58,4 +59,11 @@ export class AddCustomerArgs {
   @Length(14)
   @IsNumberString()
   cnpj: string;
+}
+
+@ArgsType()
+export class CustomerId {
+  @Field(() => ID)
+  @IsUUID()
+  customerId: string;
 }
