@@ -7,6 +7,8 @@ import {
 import { EmployeeRoles } from '../db/entities';
 import { employeeRepository } from '../db/repositories';
 
+import { getNonUndefinedFieldsFromObject } from '../utils/getNonUndefinedFieldsFromObject';
+
 interface Request {
   fields: {
     name?: string;
@@ -50,9 +52,7 @@ export class EditEmployeeService {
       throw new UserInputError(`Role "${role}" does not exist`);
     }
 
-    const changedFields = Object.fromEntries(
-      Object.entries(fields).filter(([, value]) => value !== undefined)
-    );
+    const changedFields = getNonUndefinedFieldsFromObject(fields);
 
     const employee = await employeeRepository.findOne(employeeId);
 

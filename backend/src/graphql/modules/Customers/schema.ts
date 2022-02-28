@@ -67,3 +67,30 @@ export class CustomerId {
   @IsUUID()
   customerId: string;
 }
+
+@ArgsType()
+export class EditCustomerArgs {
+  @Field({ nullable: true })
+  name: string;
+
+  @Field({ nullable: true })
+  @IsEmail()
+  email: string;
+
+  @Field({ nullable: true })
+  @IsMobilePhone('any')
+  phone?: string;
+
+  @Field({ nullable: true })
+  @IsUrl()
+  site?: string;
+
+  @Field({ nullable: true })
+  @Length(14)
+  @IsNumberString()
+  cnpj: string;
+
+  @Field(() => ID)
+  @IsUUID()
+  customerId: string;
+}

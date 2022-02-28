@@ -2,9 +2,15 @@ import { Args, Authorized, Mutation, Query, Resolver } from 'type-graphql';
 
 import { AddCustomerService } from '../../../services/AddCustomerService';
 import { DeleteCustomerService } from '../../../services/DeleteCustomerService';
+import { EditCustomerService } from '../../../services/EditCustomerService';
 import { LoadACustomerService } from '../../../services/LoadACustomerService';
 
-import { AddCustomerArgs, Customer, CustomerId } from './schema';
+import {
+  AddCustomerArgs,
+  Customer,
+  CustomerId,
+  EditCustomerArgs,
+} from './schema';
 
 @Resolver()
 export class CustomersResolver {
@@ -30,6 +36,26 @@ export class CustomersResolver {
   async deleteCustomer(@Args() { customerId }: CustomerId) {
     const deleteCustomerService = new DeleteCustomerService();
     const customer = await deleteCustomerService.execute({ customerId });
+
+    return customer;
+  }
+
+  @Authorized()
+  @Mutation(() => Customer)
+  async editCustomer(
+    @Args() { name, cnpj, email, phone, site, customerId }: EditCustomerArgs
+  ) {
+    const editCustomerService = new EditCustomerService();
+    const customer = await editCustomerService.execute({
+      fields: {
+        name,
+        cnpj,
+        email,
+        phone,
+        site,
+      },
+      customerId,
+    });
 
     return customer;
   }
