@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { Project } from '.';
 
 @Entity('customers')
 export class Customer {
@@ -28,6 +31,9 @@ export class Customer {
 
   @Column('varchar', { nullable: true })
   avatarFilename?: string;
+
+  @OneToMany(() => Project, (projects) => projects.customer)
+  projects: Project[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

@@ -2,9 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { Project } from '.';
 
 // eslint-disable-next-line no-shadow
 export enum EmployeeRoles {
@@ -40,6 +43,9 @@ export class Employee {
 
   @Column('varchar', { nullable: true })
   avatarFilename?: string;
+
+  @ManyToMany(() => Project, (projects) => projects.team)
+  projects: Project[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
