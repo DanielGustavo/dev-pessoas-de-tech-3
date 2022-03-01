@@ -1,17 +1,23 @@
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
 import { Arg, Args, Authorized, Mutation, Query, Resolver } from 'type-graphql';
-import { AddCustomerProfilePictureService } from '../../../services/AddCustomerProfilePictureService';
 
+import { AddCustomerProfilePictureService } from '../../../services/AddCustomerProfilePictureService';
 import { AddCustomerService } from '../../../services/AddCustomerService';
 import { DeleteCustomerService } from '../../../services/DeleteCustomerService';
 import { EditCustomerService } from '../../../services/EditCustomerService';
 import { LoadACustomerService } from '../../../services/LoadACustomerService';
+import { LoadCustomersService } from '../../../services/LoadCustomersService';
+
+import { PaginationArgs } from '../../../shared/graphql/schema';
+import { Filter, Order } from '../../../shared/types';
 
 import {
   AddCustomerArgs,
   Customer,
   CustomerId,
   EditCustomerArgs,
+  LoadCustomersFilterArgs,
+  LoadCustomersOrderArgs,
 } from './schema';
 
 @Resolver()
@@ -87,5 +93,28 @@ export class CustomersResolver {
     const customer = await loadACustomerService.execute({ customerId });
 
     return customer;
+  }
+
+  @Authorized()
+  @Query(() => [Customer])
+  async loadCustomers(
+    @Arg('order', () => LoadCustomersOrderArgs, { nullable: true })
+    order: Order,
+
+    @Arg('filter', () => LoadCustomersFilterArgs, { nullable: true })
+    filter: Filter,
+
+    @Arg('pagination', () => PaginationArgs, { nullable: true })
+    pagination: PaginationArgs
+  ) {
+    const loadCustomersService = new LoadCustomersService();
+
+    const customers = await loadCustomersService.execute({
+      order,
+      filter,
+      pagination,
+    });
+
+    return customers;
   }
 }

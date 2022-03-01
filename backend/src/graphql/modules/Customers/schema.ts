@@ -1,12 +1,15 @@
 import {
   IsEmail,
+  IsIn,
   IsMobilePhone,
   IsNumberString,
   IsUrl,
   IsUUID,
   Length,
 } from 'class-validator';
-import { ArgsType, Field, ID, ObjectType } from 'type-graphql';
+import { ArgsType, Field, ID, InputType, ObjectType } from 'type-graphql';
+
+import { FilterStringField } from '../../../shared/graphql/schema';
 
 @ObjectType()
 export class Customer {
@@ -93,4 +96,58 @@ export class EditCustomerArgs {
   @Field(() => ID)
   @IsUUID()
   customerId: string;
+}
+
+@InputType()
+export class LoadCustomersOrderArgs {
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  id: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  avatarFilename: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  name: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  email: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  phone: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  site: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  cnpj: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  createdAt: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  updatedAt: string;
+}
+
+@InputType()
+export class LoadCustomersFilterArgs {
+  @Field(() => FilterStringField, { nullable: true })
+  name: FilterStringField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  email: FilterStringField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  phone: FilterStringField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  cnpj: FilterStringField;
 }
