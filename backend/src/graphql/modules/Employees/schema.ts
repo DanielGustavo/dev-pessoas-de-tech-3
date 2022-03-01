@@ -1,17 +1,7 @@
-import {
-  IsEmail,
-  IsMobilePhone,
-  IsUUID,
-  Min,
-  IsIn,
-  MinLength,
-  MaxLength,
-  Max,
-} from 'class-validator';
+import { IsEmail, IsMobilePhone, IsUUID, Min, IsIn } from 'class-validator';
 import {
   ArgsType,
   Field,
-  Int,
   ID,
   ObjectType,
   InputType,
@@ -19,6 +9,11 @@ import {
 } from 'type-graphql';
 
 import { EmployeeRoles } from '../../../db/entities';
+
+import {
+  FilterNumberField,
+  FilterStringField,
+} from '../../../shared/graphql/schema';
 
 @ArgsType()
 export class EmployeeId {
@@ -74,30 +69,6 @@ export class EditEmployeeArgs {
 }
 
 @InputType()
-class FilterStringField {
-  @Field()
-  @MinLength(1)
-  @MaxLength(255)
-  value: string;
-
-  @Field()
-  @IsIn(['=', '!='])
-  operator: string;
-}
-
-@InputType()
-class FilterNumberField {
-  @Field(() => Float)
-  @MinLength(1)
-  @MaxLength(255)
-  value: number;
-
-  @Field()
-  @IsIn(['=', '>', '>=', '<', '<=', '!='])
-  operator: string;
-}
-
-@InputType()
 export class LoadEmployeesFilterArgs {
   @Field(() => FilterStringField, { nullable: true })
   name: FilterStringField;
@@ -113,18 +84,6 @@ export class LoadEmployeesFilterArgs {
 
   @Field(() => FilterStringField, { nullable: true })
   role: FilterStringField;
-}
-
-@InputType()
-export class PaginationArgs {
-  @Field(() => Int)
-  @Min(1)
-  page: number;
-
-  @Field(() => Int)
-  @Min(1)
-  @Max(30)
-  take: number;
 }
 
 @InputType()

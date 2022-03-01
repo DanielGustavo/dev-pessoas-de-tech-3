@@ -8,11 +8,7 @@ import { AddEmployeeProfilePictureService } from '../../../services/AddEmployeeP
 import { DeleteEmployeeService } from '../../../services/DeleteEmployeeService';
 import { EditEmployeeService } from '../../../services/EditEmployeeService';
 import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
-import {
-  Filter,
-  LoadEmployeesService,
-  Order,
-} from '../../../services/LoadEmployeesService';
+import { LoadEmployeesService } from '../../../services/LoadEmployeesService';
 
 import {
   AddEmployeeArgs,
@@ -21,8 +17,10 @@ import {
   EmployeeId,
   LoadEmployeesFilterArgs,
   LoadEmployeesOrderArgs,
-  PaginationArgs,
 } from './schema';
+
+import { Filter, Order } from '../../../shared/types';
+import { PaginationArgs } from '../../../shared/graphql/schema';
 
 @Resolver()
 class EmployeesResolver {

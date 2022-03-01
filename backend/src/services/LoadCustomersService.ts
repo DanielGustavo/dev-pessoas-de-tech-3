@@ -1,6 +1,6 @@
 import { OrderByCondition } from 'typeorm';
 
-import { employeeRepository } from '../db/repositories';
+import { customerRepository } from '../db/repositories';
 
 import { Filter, Order, Pagination } from '../shared/types';
 
@@ -10,17 +10,17 @@ interface Request {
   pagination?: Pagination;
 }
 
-export class LoadEmployeesService {
+export class LoadCustomersService {
   async execute(request?: Request) {
     const order = (request?.order ?? { name: 'ASC' }) as OrderByCondition;
     const filter = (request?.filter ?? {}) as Filter;
 
-    const employees = await employeeRepository.findMany({
+    const customers = await customerRepository.findMany({
       order,
       filter,
       ...request?.pagination,
     });
 
-    return employees;
+    return customers;
   }
 }
