@@ -1,4 +1,6 @@
-import { Args, Authorized, Mutation, Query, Resolver } from 'type-graphql';
+import { FileUpload, GraphQLUpload } from 'graphql-upload';
+import { Arg, Args, Authorized, Mutation, Query, Resolver } from 'type-graphql';
+import { AddCustomerProfilePictureService } from '../../../services/AddCustomerProfilePictureService';
 
 import { AddCustomerService } from '../../../services/AddCustomerService';
 import { DeleteCustomerService } from '../../../services/DeleteCustomerService';
@@ -54,6 +56,24 @@ export class CustomersResolver {
         phone,
         site,
       },
+      customerId,
+    });
+
+    return customer;
+  }
+
+  @Authorized()
+  @Mutation(() => Customer)
+  async addCustomerProfilePicture(
+    @Arg('picture', () => GraphQLUpload) picture: FileUpload,
+    @Args() { customerId }: CustomerId
+  ) {
+    const addCustomerProfilePictureService =
+      new AddCustomerProfilePictureService();
+
+    const customer = await addCustomerProfilePictureService.execute({
+      imageStream: picture.createReadStream(),
+      fileType: picture.mimetype,
       customerId,
     });
 
