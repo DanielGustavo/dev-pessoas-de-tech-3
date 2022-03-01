@@ -2,24 +2,12 @@ import { OrderByCondition } from 'typeorm';
 
 import { employeeRepository } from '../db/repositories';
 
-export interface Order {
-  [key: string]: string;
-}
-
-export interface Filter {
-  [key: string]: {
-    operator: '=' | '>' | '>=' | '<' | '<=' | '!=';
-    value: string | number;
-  };
-}
+import { Filter, Order, Pagination } from '../shared/types';
 
 interface Request {
   order?: Order;
   filter?: Filter;
-  pagination?: {
-    page: number;
-    take: number;
-  };
+  pagination?: Pagination;
 }
 
 export class LoadEmployeesService {
