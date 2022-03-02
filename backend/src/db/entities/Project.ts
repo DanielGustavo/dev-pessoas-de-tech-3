@@ -27,9 +27,6 @@ export class Project {
   @Column('varchar')
   name: string;
 
-  @Column('varchar')
-  email: string;
-
   @Column('varchar', { nullable: true })
   description?: string;
 
