@@ -15,6 +15,7 @@ import { DeleteProjectService } from '../../../services/DeleteProjectService';
 import { LoadACustomerService } from '../../../services/LoadACustomerService';
 import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
 import { LoadAProjectService } from '../../../services/LoadAProjectService';
+import { LoadATeamFromAProject } from '../../../services/LoadATeamFromAProject';
 import { LoadProjectsService } from '../../../services/LoadProjectsService';
 
 import { PaginationArgs } from '../../../shared/graphql/schema';
@@ -118,6 +119,20 @@ class ProjectsResolver {
     });
 
     return customer;
+  }
+
+  @Authorized()
+  @FieldResolver(() => [Employee])
+  async team(@Root() project: Project) {
+    const loadATeamFromAProjectService = new LoadATeamFromAProject();
+
+    if (project.team !== undefined) return project.team;
+
+    const team = await loadATeamFromAProjectService.execute({
+      projectId: project.id,
+    });
+
+    return team;
   }
 }
 
