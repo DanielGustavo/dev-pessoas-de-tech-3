@@ -1,11 +1,24 @@
-import { Args, Authorized, Mutation, Resolver } from 'type-graphql';
+import {
+  Args,
+  Authorized,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from 'type-graphql';
 
 import { AddProjectService } from '../../../services/AddProjectService';
 import { DeleteProjectService } from '../../../services/DeleteProjectService';
+import { LoadACustomerService } from '../../../services/LoadACustomerService';
+import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
+import { LoadAProjectService } from '../../../services/LoadAProjectService';
 
+import { Customer } from '../Customers/schema';
+import { Employee } from '../Employees/schema';
 import { AddProjectArgs, Project, ProjectId } from './schema';
 
-@Resolver()
+@Resolver(Project)
 class ProjectsResolver {
   @Authorized()
   @Mutation(() => Project)
@@ -23,6 +36,39 @@ class ProjectsResolver {
     const project = await deleteProjectService.execute({ projectId });
 
     return project;
+  }
+
+  @Authorized()
+  @Query(() => Project)
+  async loadAProject(@Args() { projectId }: ProjectId) {
+    const loadAProjectService = new LoadAProjectService();
+    const project = await loadAProjectService.execute({ projectId });
+
+    return project;
+  }
+
+  @Authorized()
+  @FieldResolver(() => Employee)
+  async leader(@Root() project: Project) {
+    const loadAnEmployeeService = new LoadAnEmployeeService();
+
+    const leader = await loadAnEmployeeService.execute({
+      employeeId: project.leaderId,
+    });
+
+    return leader;
+  }
+
+  @Authorized()
+  @FieldResolver(() => Customer)
+  async customer(@Root() project: Project) {
+    const loadACustomerService = new LoadACustomerService();
+
+    const customer = await loadACustomerService.execute({
+      customerId: project.customerId,
+    });
+
+    return customer;
   }
 }
 
