@@ -1,3 +1,4 @@
+import { isUUID } from 'class-validator';
 import {
   FindManyOptions,
   LessThan,
@@ -30,7 +31,9 @@ export abstract class Repository<T> extends TypeORMRepository<T> {
 
     const operatorMethod = {
       '=': (value: string | number | unknown) =>
-        typeof value === 'string' ? Like(`%${value}%`) : value,
+        typeof value === 'string' && !isUUID(value)
+          ? Like(`%${value}%`)
+          : value,
       '>': MoreThan,
       '>=': MoreThanOrEqual,
       '<': LessThan,
