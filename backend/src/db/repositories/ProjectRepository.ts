@@ -9,6 +9,11 @@ interface AddEmployeesInTeamProps {
   projectId: string;
 }
 
+interface AddAnEmployeeInTeamProps {
+  employeeId: string;
+  projectId: string;
+}
+
 @EntityRepository(Project)
 export class ProjectRepository extends Repository<Project> {
   async addEmployeesInTeam({
@@ -18,5 +23,14 @@ export class ProjectRepository extends Repository<Project> {
     const queryBuilder = this.createQueryBuilder();
 
     queryBuilder.relation('team').of(projectId).add(employeesIds);
+  }
+
+  async addAnEmployeeInTeam({
+    employeeId,
+    projectId,
+  }: AddAnEmployeeInTeamProps) {
+    const queryBuilder = this.createQueryBuilder();
+
+    queryBuilder.relation('team').of(projectId).add(employeeId);
   }
 }
