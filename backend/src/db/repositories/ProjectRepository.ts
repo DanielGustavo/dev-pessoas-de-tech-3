@@ -14,6 +14,11 @@ interface AddAnEmployeeInTeamProps {
   projectId: string;
 }
 
+interface DeleteEmployeeFromProject {
+  employeeId: string;
+  projectId: string;
+}
+
 @EntityRepository(Project)
 export class ProjectRepository extends Repository<Project> {
   async addEmployeesInTeam({
@@ -32,5 +37,14 @@ export class ProjectRepository extends Repository<Project> {
     const queryBuilder = this.createQueryBuilder();
 
     queryBuilder.relation('team').of(projectId).add(employeeId);
+  }
+
+  async deleteEmployeeFromProject({
+    employeeId,
+    projectId,
+  }: DeleteEmployeeFromProject) {
+    const queryBuilder = this.createQueryBuilder();
+
+    queryBuilder.relation('team').of(projectId).remove(employeeId);
   }
 }

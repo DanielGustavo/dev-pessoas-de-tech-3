@@ -197,3 +197,14 @@ export class AddEmployeeInAProjectArgs {
   @IsUUID()
   projectId: string;
 }
+
+@ArgsType()
+export class DeleteEmployeeFromProjectArgs {
+  @Field(() => ID)
+  @IsUUID()
+  employeeId: string;
+
+  @Field(() => ID)
+  @IsUUID()
+  projectId: string;
+}

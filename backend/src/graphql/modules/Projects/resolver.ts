@@ -11,6 +11,7 @@ import {
 import { AddEmployeeInProjectService } from '../../../services/AddEmployeeInProjectService';
 
 import { AddProjectService } from '../../../services/AddProjectService';
+import { DeleteEmployeeFromProjectService } from '../../../services/DeleteEmployeeFromProjectService';
 import { DeleteProjectService } from '../../../services/DeleteProjectService';
 import { LoadACustomerService } from '../../../services/LoadACustomerService';
 import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
@@ -26,6 +27,7 @@ import { Employee } from '../Employees/schema';
 import {
   AddEmployeeInAProjectArgs,
   AddProjectArgs,
+  DeleteEmployeeFromProjectArgs,
   LoadProjectsFilterArgs,
   LoadProjectsOrderArgs,
   Project,
@@ -59,6 +61,22 @@ class ProjectsResolver {
   ) {
     const addEmployeeInProjectService = new AddEmployeeInProjectService();
     const project = await addEmployeeInProjectService.execute({
+      projectId,
+      employeeId,
+    });
+
+    return project;
+  }
+
+  @Authorized()
+  @Mutation(() => Project)
+  async deleteEmployeeFromProject(
+    @Args() { projectId, employeeId }: DeleteEmployeeFromProjectArgs
+  ) {
+    const deleteEmployeeFromProjectService =
+      new DeleteEmployeeFromProjectService();
+
+    const project = await deleteEmployeeFromProjectService.execute({
       projectId,
       employeeId,
     });
