@@ -1,7 +1,19 @@
-import { IsUUID, Min } from 'class-validator';
-import { ArgsType, Field, Float, ID, Int, ObjectType } from 'type-graphql';
+import { IsIn, IsUUID, Min } from 'class-validator';
+import {
+  ArgsType,
+  Field,
+  Float,
+  ID,
+  InputType,
+  Int,
+  ObjectType,
+} from 'type-graphql';
 
 import { ProjectPriorityLevel } from '../../../db/entities/Project';
+import {
+  FilterNumberField,
+  FilterStringField,
+} from '../../../shared/graphql/schema';
 
 @ObjectType()
 export class Project {
@@ -89,4 +101,82 @@ export class ProjectId {
   @Field(() => ID)
   @IsUUID()
   projectId: string;
+}
+
+@InputType()
+export class LoadProjectsOrderArgs {
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  id: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  name: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  description: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  technicalSeconds: number;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  paymentPerHour: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  discount: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  deadline: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  priorityLevel: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  customerId: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  leaderId: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  createdAt: string;
+
+  @Field({ nullable: true })
+  @IsIn(['ASC', 'DESC'])
+  updatedAt: string;
+}
+
+@InputType()
+export class LoadProjectsFilterArgs {
+  @Field(() => FilterStringField, { nullable: true })
+  name: FilterStringField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  customerId: FilterStringField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  leaderId: FilterStringField;
+
+  @Field(() => FilterNumberField, { nullable: true })
+  technicalSeconds: FilterNumberField;
+
+  @Field(() => FilterNumberField, { nullable: true })
+  paymentPerHour: FilterNumberField;
+
+  @Field(() => FilterNumberField, { nullable: true })
+  discount: FilterNumberField;
+
+  @Field(() => FilterNumberField, { nullable: true })
+  deadline: FilterNumberField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  priorityLevel: FilterStringField;
 }

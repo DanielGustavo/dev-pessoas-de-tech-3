@@ -1,4 +1,5 @@
 import {
+  Arg,
   Args,
   Authorized,
   FieldResolver,
@@ -13,10 +14,20 @@ import { DeleteProjectService } from '../../../services/DeleteProjectService';
 import { LoadACustomerService } from '../../../services/LoadACustomerService';
 import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
 import { LoadAProjectService } from '../../../services/LoadAProjectService';
+import { LoadProjectsService } from '../../../services/LoadProjectsService';
+
+import { PaginationArgs } from '../../../shared/graphql/schema';
+import { Filter, Order } from '../../../shared/types';
 
 import { Customer } from '../Customers/schema';
 import { Employee } from '../Employees/schema';
-import { AddProjectArgs, Project, ProjectId } from './schema';
+import {
+  AddProjectArgs,
+  LoadProjectsFilterArgs,
+  LoadProjectsOrderArgs,
+  Project,
+  ProjectId,
+} from './schema';
 
 @Resolver(Project)
 class ProjectsResolver {
@@ -45,6 +56,28 @@ class ProjectsResolver {
     const project = await loadAProjectService.execute({ projectId });
 
     return project;
+  }
+
+  @Authorized()
+  @Query(() => [Project])
+  async loadProjects(
+    @Arg('filter', () => LoadProjectsFilterArgs, { nullable: true })
+    filter: Filter,
+
+    @Arg('order', () => LoadProjectsOrderArgs, { nullable: true })
+    order: Order,
+
+    @Arg('pagination', () => PaginationArgs, { nullable: true })
+    pagination: PaginationArgs
+  ) {
+    const loadProjectsService = new LoadProjectsService();
+    const projects = await loadProjectsService.execute({
+      filter,
+      order,
+      pagination,
+    });
+
+    return projects;
   }
 
   @Authorized()
