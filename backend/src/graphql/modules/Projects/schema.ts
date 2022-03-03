@@ -208,3 +208,14 @@ export class DeleteEmployeeFromProjectArgs {
   @IsUUID()
   projectId: string;
 }
+
+@ArgsType()
+export class ReplaceCustomerInProjectArgs {
+  @Field(() => ID)
+  @IsUUID()
+  customerId: string;
+
+  @Field(() => ID)
+  @IsUUID()
+  projectId: string;
+}

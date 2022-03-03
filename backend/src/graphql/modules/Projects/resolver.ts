@@ -18,6 +18,7 @@ import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
 import { LoadAProjectService } from '../../../services/LoadAProjectService';
 import { LoadATeamFromAProject } from '../../../services/LoadATeamFromAProject';
 import { LoadProjectsService } from '../../../services/LoadProjectsService';
+import { ReplaceCustomerInAProjectService } from '../../../services/ReplaceCustomerInAProjectService';
 
 import { PaginationArgs } from '../../../shared/graphql/schema';
 import { Filter, Order } from '../../../shared/types';
@@ -32,6 +33,7 @@ import {
   LoadProjectsOrderArgs,
   Project,
   ProjectId,
+  ReplaceCustomerInProjectArgs,
 } from './schema';
 
 @Resolver(Project)
@@ -79,6 +81,22 @@ class ProjectsResolver {
     const project = await deleteEmployeeFromProjectService.execute({
       projectId,
       employeeId,
+    });
+
+    return project;
+  }
+
+  @Authorized()
+  @Mutation(() => Project)
+  async replaceCustomerInProject(
+    @Args() { projectId, customerId }: ReplaceCustomerInProjectArgs
+  ) {
+    const replaceCustomerInAProjectService =
+      new ReplaceCustomerInAProjectService();
+
+    const project = await replaceCustomerInAProjectService.execute({
+      projectId,
+      customerId,
     });
 
     return project;
