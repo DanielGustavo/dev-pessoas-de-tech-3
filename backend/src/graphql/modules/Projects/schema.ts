@@ -10,10 +10,13 @@ import {
 } from 'type-graphql';
 
 import { ProjectPriorityLevel } from '../../../db/entities/Project';
+
 import {
   FilterNumberField,
   FilterStringField,
 } from '../../../shared/graphql/schema';
+
+import { Employee } from '../Employees/schema';
 
 @ObjectType()
 export class Project {
@@ -40,6 +43,9 @@ export class Project {
 
   @Field()
   priorityLevel: string;
+
+  @Field(() => [Employee], { nullable: true })
+  team?: Employee[];
 
   @Field(() => ID, { nullable: true })
   customerId?: string;
@@ -179,4 +185,15 @@ export class LoadProjectsFilterArgs {
 
   @Field(() => FilterStringField, { nullable: true })
   priorityLevel: FilterStringField;
+}
+
+@ArgsType()
+export class AddEmployeeInAProjectArgs {
+  @Field(() => ID)
+  @IsUUID()
+  employeeId: string;
+
+  @Field(() => ID)
+  @IsUUID()
+  projectId: string;
 }

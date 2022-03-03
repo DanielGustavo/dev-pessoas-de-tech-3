@@ -8,6 +8,7 @@ import {
   Resolver,
   Root,
 } from 'type-graphql';
+import { AddEmployeeInProjectService } from '../../../services/AddEmployeeInProjectService';
 
 import { AddProjectService } from '../../../services/AddProjectService';
 import { DeleteProjectService } from '../../../services/DeleteProjectService';
@@ -22,6 +23,7 @@ import { Filter, Order } from '../../../shared/types';
 import { Customer } from '../Customers/schema';
 import { Employee } from '../Employees/schema';
 import {
+  AddEmployeeInAProjectArgs,
   AddProjectArgs,
   LoadProjectsFilterArgs,
   LoadProjectsOrderArgs,
@@ -45,6 +47,20 @@ class ProjectsResolver {
   async deleteProject(@Args() { projectId }: ProjectId) {
     const deleteProjectService = new DeleteProjectService();
     const project = await deleteProjectService.execute({ projectId });
+
+    return project;
+  }
+
+  @Authorized()
+  @Mutation(() => Project)
+  async addEmployeeInAProject(
+    @Args() { projectId, employeeId }: AddEmployeeInAProjectArgs
+  ) {
+    const addEmployeeInProjectService = new AddEmployeeInProjectService();
+    const project = await addEmployeeInProjectService.execute({
+      projectId,
+      employeeId,
+    });
 
     return project;
   }
