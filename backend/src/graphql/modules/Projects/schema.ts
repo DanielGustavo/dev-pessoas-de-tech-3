@@ -83,3 +83,10 @@ export class AddProjectArgs {
   @IsUUID()
   designerId: string;
 }
+
+@ArgsType()
+export class ProjectId {
+  @Field(() => ID)
+  @IsUUID()
+  projectId: string;
+}
