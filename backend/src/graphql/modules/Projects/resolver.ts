@@ -3,6 +3,7 @@ import {
   Args,
   Authorized,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -18,6 +19,7 @@ import { LoadACustomerService } from '../../../services/LoadACustomerService';
 import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
 import { LoadAProjectService } from '../../../services/LoadAProjectService';
 import { LoadATeamFromAProject } from '../../../services/LoadATeamFromAProject';
+import { LoadProjectsQuantityService } from '../../../services/LoadProjectsQuantityService';
 import { LoadProjectsService } from '../../../services/LoadProjectsService';
 import { ReplaceCustomerInAProjectService } from '../../../services/ReplaceCustomerInAProjectService';
 import { ReplaceEmployeeInAProjectService } from '../../../services/ReplaceEmployeeInAProjectService';
@@ -135,6 +137,15 @@ class ProjectsResolver {
     });
 
     return project;
+  }
+
+  @Authorized()
+  @Query(() => Int)
+  async projectsQuantity() {
+    const loadProjectsQuantityService = new LoadProjectsQuantityService();
+    const projectsQuantity = await loadProjectsQuantityService.execute();
+
+    return projectsQuantity;
   }
 
   @Authorized()

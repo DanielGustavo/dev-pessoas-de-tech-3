@@ -1,5 +1,13 @@
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { Arg, Args, Authorized, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Args,
+  Authorized,
+  Int,
+  Mutation,
+  Query,
+  Resolver,
+} from 'type-graphql';
 import { UserInputError } from 'apollo-server-express';
 import { isUUID } from 'class-validator';
 
@@ -9,6 +17,7 @@ import { DeleteEmployeeService } from '../../../services/DeleteEmployeeService';
 import { EditEmployeeService } from '../../../services/EditEmployeeService';
 import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
 import { LoadEmployeesService } from '../../../services/LoadEmployeesService';
+import { LoadEmployeesQuantityService } from '../../../services/LoadEmployeesQuantityService';
 
 import {
   AddEmployeeArgs,
@@ -71,6 +80,15 @@ class EmployeesResolver {
     const employee = await deleteEmployeeService.execute({ employeeId });
 
     return employee;
+  }
+
+  @Authorized()
+  @Query(() => Int)
+  async employeesQuantity() {
+    const loadEmployeesQuantityService = new LoadEmployeesQuantityService();
+    const employeesQuantity = await loadEmployeesQuantityService.execute();
+
+    return employeesQuantity;
   }
 
   @Authorized()
