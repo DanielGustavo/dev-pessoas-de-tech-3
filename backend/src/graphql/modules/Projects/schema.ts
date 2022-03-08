@@ -68,7 +68,7 @@ export class EditProjectArgs {
   @Field({ nullable: true })
   description?: string;
 
-  @Field(() => Int, { nullable: true })
+  @Field(() => Float, { nullable: true })
   deadline?: number;
 
   @Field(() => String, { nullable: true })
@@ -98,7 +98,7 @@ export class AddProjectArgs {
   @Field({ nullable: true })
   description?: string;
 
-  @Field(() => Int)
+  @Field(() => Float)
   deadline: number;
 
   @Field(() => String, { nullable: true })
