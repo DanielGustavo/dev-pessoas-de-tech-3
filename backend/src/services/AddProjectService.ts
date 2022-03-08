@@ -1,5 +1,7 @@
 import { ApolloError, ForbiddenError } from 'apollo-server-express';
 
+import { Employee } from '../db/entities';
+
 import {
   customerRepository,
   employeeRepository,
@@ -63,7 +65,7 @@ export class AddProjectService {
     const developerIsTheLeader = developerId === leaderId;
     const designerIsTheLeader = designerId === leaderId;
 
-    let developer;
+    let developer: undefined | Employee;
 
     if (developerIsTheLeader) {
       developer = leader;
@@ -84,7 +86,7 @@ export class AddProjectService {
       );
     }
 
-    let designer;
+    let designer: undefined | Employee;
 
     if (designerIsTheLeader) {
       designer = leader;

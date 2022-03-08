@@ -13,6 +13,7 @@ import { AddEmployeeInProjectService } from '../../../services/AddEmployeeInProj
 import { AddProjectService } from '../../../services/AddProjectService';
 import { DeleteEmployeeFromProjectService } from '../../../services/DeleteEmployeeFromProjectService';
 import { DeleteProjectService } from '../../../services/DeleteProjectService';
+import { EditProjectService } from '../../../services/EditProjectService';
 import { LoadACustomerService } from '../../../services/LoadACustomerService';
 import { LoadAnEmployeeService } from '../../../services/LoadAnEmployeeService';
 import { LoadAProjectService } from '../../../services/LoadAProjectService';
@@ -30,6 +31,7 @@ import {
   AddEmployeeInAProjectArgs,
   AddProjectArgs,
   DeleteEmployeeFromProjectArgs,
+  EditProjectArgs,
   LoadProjectsFilterArgs,
   LoadProjectsOrderArgs,
   Project,
@@ -45,6 +47,15 @@ class ProjectsResolver {
   async addProject(@Args() args: AddProjectArgs) {
     const addProjectService = new AddProjectService();
     const project = await addProjectService.execute(args);
+
+    return project;
+  }
+
+  @Authorized()
+  @Mutation(() => Project)
+  async editProject(@Args() args: EditProjectArgs) {
+    const editProjectService = new EditProjectService();
+    const project = await editProjectService.execute(args);
 
     return project;
   }

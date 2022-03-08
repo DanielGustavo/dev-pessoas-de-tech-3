@@ -61,6 +61,36 @@ export class Project {
 }
 
 @ArgsType()
+export class EditProjectArgs {
+  @Field({ nullable: true })
+  name?: string;
+
+  @Field({ nullable: true })
+  description?: string;
+
+  @Field(() => Int, { nullable: true })
+  deadline?: number;
+
+  @Field(() => String, { nullable: true })
+  priority?: keyof typeof ProjectPriorityLevel;
+
+  @Field(() => Float, { nullable: true })
+  @Min(0)
+  technicalHours?: number;
+
+  @Field(() => Float, { nullable: true })
+  @Min(0)
+  paymentPerHour?: number;
+
+  @Field(() => Float, { nullable: true })
+  discount?: number;
+
+  @Field(() => ID)
+  @IsUUID()
+  projectId: string;
+}
+
+@ArgsType()
 export class AddProjectArgs {
   @Field()
   name: string;
@@ -68,7 +98,7 @@ export class AddProjectArgs {
   @Field({ nullable: true })
   description?: string;
 
-  @Field()
+  @Field(() => Int)
   deadline: number;
 
   @Field(() => String, { nullable: true })
