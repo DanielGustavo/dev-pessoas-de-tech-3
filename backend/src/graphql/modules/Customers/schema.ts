@@ -150,4 +150,7 @@ export class LoadCustomersFilterArgs {
 
   @Field(() => FilterStringField, { nullable: true })
   cnpj: FilterStringField;
+
+  @Field(() => FilterStringField, { nullable: true })
+  site: FilterStringField;
 }
