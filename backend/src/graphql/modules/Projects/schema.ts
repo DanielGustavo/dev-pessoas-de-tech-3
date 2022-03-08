@@ -219,3 +219,18 @@ export class ReplaceCustomerInProjectArgs {
   @IsUUID()
   projectId: string;
 }
+
+@ArgsType()
+export class ReplaceEmployeeInProjectArgs {
+  @Field(() => ID)
+  @IsUUID()
+  replacedEmployeeId: string;
+
+  @Field(() => ID)
+  @IsUUID()
+  replacerEmployeeId: string;
+
+  @Field(() => ID)
+  @IsUUID()
+  projectId: string;
+}
