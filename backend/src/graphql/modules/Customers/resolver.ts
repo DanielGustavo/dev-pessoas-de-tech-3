@@ -1,11 +1,20 @@
 import { FileUpload, GraphQLUpload } from 'graphql-upload';
-import { Arg, Args, Authorized, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Args,
+  Authorized,
+  Int,
+  Mutation,
+  Query,
+  Resolver,
+} from 'type-graphql';
 
 import { AddCustomerProfilePictureService } from '../../../services/AddCustomerProfilePictureService';
 import { AddCustomerService } from '../../../services/AddCustomerService';
 import { DeleteCustomerService } from '../../../services/DeleteCustomerService';
 import { EditCustomerService } from '../../../services/EditCustomerService';
 import { LoadACustomerService } from '../../../services/LoadACustomerService';
+import { LoadCustomersQuantityService } from '../../../services/LoadCustomersQuantityService';
 import { LoadCustomersService } from '../../../services/LoadCustomersService';
 
 import { PaginationArgs } from '../../../shared/graphql/schema';
@@ -84,6 +93,15 @@ export class CustomersResolver {
     });
 
     return customer;
+  }
+
+  @Authorized()
+  @Query(() => Int)
+  async customersQuantity() {
+    const loadCustomersQuantityService = new LoadCustomersQuantityService();
+    const customersQuantity = await loadCustomersQuantityService.execute();
+
+    return customersQuantity;
   }
 
   @Authorized()
