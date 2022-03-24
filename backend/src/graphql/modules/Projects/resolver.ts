@@ -226,6 +226,14 @@ class ProjectsResolver {
 
     return value;
   }
+
+  @Authorized()
+  @FieldResolver(() => Float)
+  technicalHours(@Root() project: Project) {
+    const technicalHours = project.technicalSeconds / (60 * 60);
+
+    return technicalHours;
+  }
 }
 
 export { ProjectsResolver };
