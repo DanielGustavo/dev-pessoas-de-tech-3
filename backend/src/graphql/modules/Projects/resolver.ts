@@ -3,6 +3,7 @@ import {
   Args,
   Authorized,
   FieldResolver,
+  Float,
   Int,
   Mutation,
   Query,
@@ -215,6 +216,15 @@ class ProjectsResolver {
     });
 
     return team;
+  }
+
+  @Authorized()
+  @FieldResolver(() => Float)
+  value(@Root() project: Project) {
+    const technicalHours = project.technicalSeconds / (60 * 60);
+    const value = project.paymentPerHour * technicalHours;
+
+    return value;
   }
 }
 
