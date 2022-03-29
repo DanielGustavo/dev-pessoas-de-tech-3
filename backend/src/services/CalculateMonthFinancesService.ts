@@ -28,10 +28,10 @@ export class CalculateMonthFinancesService {
 
     const employees = await employeeRepository.find();
 
-    const sumOfEmployeesPayments = employees.reduce((sum, employee) => {
-      console.log(employee.salary, typeof employee.salary);
-      return sum + Number(employee.salary);
-    }, 0);
+    const sumOfEmployeesPayments = employees.reduce(
+      (sum, employee) => sum + Number(employee.salary),
+      0
+    );
 
     return {
       monthPayment: sumOfProjectsValues,
