@@ -1,14 +1,20 @@
 import { ApolloError } from 'apollo-server-express';
 
-import { LocalUploader } from '../helpers/LocalUploader';
-
 import { employeeRepository } from '../db/repositories';
+
+import { StorageHelper } from './dependencies/StorageHelper';
 
 interface Request {
   employeeId: string;
 }
 
 export class DeleteEmployeeService {
+  constructor(storageHelper: StorageHelper) {
+    this.storageHelper = storageHelper;
+  }
+
+  private storageHelper: StorageHelper;
+
   async execute({ employeeId }: Request) {
     const employee = await employeeRepository.findOne(employeeId);
 
@@ -19,8 +25,14 @@ export class DeleteEmployeeService {
     await employeeRepository.delete(employeeId);
 
     if (employee.avatarFilename) {
-      const uploader = new LocalUploader();
-      await uploader.delete({ filename: employee.avatarFilename });
+      try {
+        await this.storageHelper.delete({ filename: employee.avatarFilename });
+      } catch {
+        throw new ApolloError(
+          'Something went wrong with the storage system',
+          '500'
+        );
+      }
     }
 
     return employee;

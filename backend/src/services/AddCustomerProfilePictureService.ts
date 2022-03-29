@@ -3,7 +3,7 @@ import { UserInputError, ApolloError } from 'apollo-server-express';
 
 import { customerRepository } from '../db/repositories';
 
-import { LocalUploader } from '../helpers/LocalUploader';
+import { StorageHelper } from './dependencies/StorageHelper';
 
 interface Request {
   imageStream: stream.Readable;
@@ -12,6 +12,12 @@ interface Request {
 }
 
 export class AddCustomerProfilePictureService {
+  constructor(storageHelper: StorageHelper) {
+    this.storageHelper = storageHelper;
+  }
+
+  private storageHelper: StorageHelper;
+
   async execute({ imageStream, fileType, customerId }: Request) {
     const fileIsNotAnImage = fileType.split('/')[0] !== 'image';
 
@@ -26,13 +32,12 @@ export class AddCustomerProfilePictureService {
     }
 
     const imageType = fileType.split('/')[1];
-    const uploader = new LocalUploader();
 
     const filename = `${customer.id}.${imageType}`;
     customer.avatarFilename = filename;
 
     try {
-      await uploader.upload({
+      await this.storageHelper.upload({
         fileStream: imageStream,
         filename,
       });

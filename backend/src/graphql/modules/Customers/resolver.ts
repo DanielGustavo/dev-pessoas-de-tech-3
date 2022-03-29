@@ -9,6 +9,8 @@ import {
   Resolver,
 } from 'type-graphql';
 
+import { storageHelperFactory } from '../../../factories/storageHelperFactory';
+
 import { AddCustomerProfilePictureService } from '../../../services/AddCustomerProfilePictureService';
 import { AddCustomerService } from '../../../services/AddCustomerService';
 import { DeleteCustomerService } from '../../../services/DeleteCustomerService';
@@ -51,7 +53,9 @@ export class CustomersResolver {
   @Authorized()
   @Mutation(() => Customer)
   async deleteCustomer(@Args() { customerId }: CustomerId) {
-    const deleteCustomerService = new DeleteCustomerService();
+    const storageHelper = storageHelperFactory();
+
+    const deleteCustomerService = new DeleteCustomerService(storageHelper);
     const customer = await deleteCustomerService.execute({ customerId });
 
     return customer;
@@ -83,8 +87,10 @@ export class CustomersResolver {
     @Arg('picture', () => GraphQLUpload) picture: FileUpload,
     @Args() { customerId }: CustomerId
   ) {
+    const storageHelper = storageHelperFactory();
+
     const addCustomerProfilePictureService =
-      new AddCustomerProfilePictureService();
+      new AddCustomerProfilePictureService(storageHelper);
 
     const customer = await addCustomerProfilePictureService.execute({
       imageStream: picture.createReadStream(),
