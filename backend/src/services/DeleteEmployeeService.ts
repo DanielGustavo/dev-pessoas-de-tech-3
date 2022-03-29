@@ -20,7 +20,15 @@ export class DeleteEmployeeService {
 
     if (employee.avatarFilename) {
       const storageHelper = new LocalStorage();
-      await storageHelper.delete({ filename: employee.avatarFilename });
+
+      try {
+        await storageHelper.delete({ filename: employee.avatarFilename });
+      } catch {
+        throw new ApolloError(
+          'Something went wrong with the storage system',
+          '500'
+        );
+      }
     }
 
     return employee;
