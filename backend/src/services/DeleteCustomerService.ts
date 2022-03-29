@@ -1,14 +1,20 @@
 import { ApolloError } from 'apollo-server-express';
 
-import { LocalStorage } from '../helpers/LocalStorage';
-
 import { customerRepository } from '../db/repositories';
+
+import { StorageHelper } from './dependencies/StorageHelper';
 
 interface Request {
   customerId: string;
 }
 
 export class DeleteCustomerService {
+  constructor(storageHelper: StorageHelper) {
+    this.storageHelper = storageHelper;
+  }
+
+  private storageHelper: StorageHelper;
+
   async execute({ customerId }: Request) {
     const customer = await customerRepository.findOne(customerId);
 
@@ -19,10 +25,8 @@ export class DeleteCustomerService {
     await customerRepository.delete(customerId);
 
     if (customer.avatarFilename) {
-      const storageHelper = new LocalStorage();
-
       try {
-        await storageHelper.delete({ filename: customer.avatarFilename });
+        await this.storageHelper.delete({ filename: customer.avatarFilename });
       } catch {
         throw new ApolloError(
           'Something went wrong with the storage system',

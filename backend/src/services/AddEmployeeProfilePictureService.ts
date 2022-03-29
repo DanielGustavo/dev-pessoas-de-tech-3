@@ -3,7 +3,7 @@ import { UserInputError, ApolloError } from 'apollo-server-express';
 
 import { employeeRepository } from '../db/repositories';
 
-import { LocalStorage } from '../helpers/LocalStorage';
+import { StorageHelper } from './dependencies/StorageHelper';
 
 interface Request {
   imageStream: stream.Readable;
@@ -12,6 +12,12 @@ interface Request {
 }
 
 export class AddEmployeeProfilePictureService {
+  constructor(storageHelper: StorageHelper) {
+    this.storageHelper = storageHelper;
+  }
+
+  private storageHelper: StorageHelper;
+
   async execute({ imageStream, fileType, employeeId }: Request) {
     const fileIsNotAnImage = fileType.split('/')[0] !== 'image';
 
@@ -26,13 +32,12 @@ export class AddEmployeeProfilePictureService {
     }
 
     const imageType = fileType.split('/')[1];
-    const storageHelper = new LocalStorage();
 
     const filename = `${employee.id}.${imageType}`;
     employee.avatarFilename = filename;
 
     try {
-      await storageHelper.upload({
+      await this.storageHelper.upload({
         fileStream: imageStream,
         filename,
       });

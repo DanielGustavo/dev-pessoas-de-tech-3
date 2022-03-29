@@ -31,6 +31,8 @@ import {
 import { Filter, Order } from '../../../shared/types';
 import { PaginationArgs } from '../../../shared/graphql/schema';
 
+import { storageHelperFactory } from '../../../factories/storageHelperFactory';
+
 @Resolver()
 class EmployeesResolver {
   @Authorized()
@@ -60,8 +62,10 @@ class EmployeesResolver {
       throw new UserInputError('employeeId must be a valid UUID');
     }
 
+    const storageHelper = storageHelperFactory();
+
     const addEmployeeProfilePictureService =
-      new AddEmployeeProfilePictureService();
+      new AddEmployeeProfilePictureService(storageHelper);
 
     const employee = await addEmployeeProfilePictureService.execute({
       imageStream: picture.createReadStream(),
@@ -75,7 +79,9 @@ class EmployeesResolver {
   @Authorized()
   @Mutation(() => Employee)
   async deleteEmployee(@Args() { employeeId }: EmployeeId) {
-    const deleteEmployeeService = new DeleteEmployeeService();
+    const storageHelper = storageHelperFactory();
+
+    const deleteEmployeeService = new DeleteEmployeeService(storageHelper);
 
     const employee = await deleteEmployeeService.execute({ employeeId });
 
