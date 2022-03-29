@@ -1,16 +1,16 @@
 import fs from 'fs';
-import stream from 'stream';
 import { join } from 'path';
 
-interface UploadProps {
-  filename: string;
-  fileStream: stream.Readable;
-}
+import {
+  StorageHelper,
+  UploadProps,
+  DeleteProps,
+} from '../services/dependencies/StorageHelper';
 
-export class LocalStorage {
+export class LocalStorage implements StorageHelper {
   private path = join(__dirname, '..', '..', 'uploads');
 
-  upload({ fileStream, filename }: UploadProps) {
+  upload({ fileStream, filename }: UploadProps): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const fullPath = join(this.path, filename);
       const writeableStream = fs.createWriteStream(fullPath);
@@ -22,20 +22,25 @@ export class LocalStorage {
 
       fileStream.pipe(writeableStream).on('error', () => {
         writeableStream.destroy();
-        reject();
+        reject(false);
       });
     });
   }
 
-  async delete({ filename }) {
+  async delete({ filename }: DeleteProps): Promise<boolean> {
     const fullPath = join(this.path, filename);
     const fileExists = await this.fileExists(fullPath);
 
-    return new Promise((resolve) => {
-      if (fileExists) {
-        fs.rm(fullPath, () => resolve(true));
-      } else {
+    return new Promise((resolve, reject) => {
+      if (!fileExists) {
         resolve(true);
+        return;
+      }
+
+      try {
+        fs.rm(fullPath, () => resolve(true));
+      } catch {
+        reject(false);
       }
     });
   }
