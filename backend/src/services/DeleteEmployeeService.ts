@@ -1,6 +1,6 @@
 import { ApolloError } from 'apollo-server-express';
 
-import { LocalUploader } from '../helpers/LocalUploader';
+import { LocalStorage } from '../helpers/LocalStorage';
 
 import { employeeRepository } from '../db/repositories';
 
@@ -19,8 +19,8 @@ export class DeleteEmployeeService {
     await employeeRepository.delete(employeeId);
 
     if (employee.avatarFilename) {
-      const uploader = new LocalUploader();
-      await uploader.delete({ filename: employee.avatarFilename });
+      const storageHelper = new LocalStorage();
+      await storageHelper.delete({ filename: employee.avatarFilename });
     }
 
     return employee;

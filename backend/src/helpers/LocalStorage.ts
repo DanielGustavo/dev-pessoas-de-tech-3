@@ -7,7 +7,7 @@ interface UploadProps {
   fileStream: stream.Readable;
 }
 
-export class LocalUploader {
+export class LocalStorage {
   private path = join(__dirname, '..', '..', 'uploads');
 
   upload({ fileStream, filename }: UploadProps) {
